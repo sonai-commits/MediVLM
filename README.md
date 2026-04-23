@@ -1,20 +1,47 @@
-# MediVLM: A Vision Language Model for Radiology Report Generation
+# 🩺 MediVLM: A Vision Language Model for Radiology Report Generation
 
-**"MediVLM: A Vision Language Model for Radiology Report Generation from Medical Images"** —
-Debanjan Goswami, Ronast Subedi, Shayok Chakraborty, *Findings of EMNLP 2025*
-(pp. 10287-10304).
+**MediVLM** is a multimodal framework designed to generate clinically meaningful radiology reports directly from medical images by aligning visual and textual representations.
 
-Details of every component of MediVLM:
+> **Our Paper**  
+**“MediVLM: A Vision Language Model for Radiology Report Generation from Medical Images”**  
+Debanjan Goswami, Ronast Subedi, Shayok Chakraborty  
+*Findings of EMNLP 2025* (pp. 10287–10304)
 
-1. **Faster R-CNN** (ResNet-34 backbone, pretrained on MS-CXR) to extract salient anatomical regions.
-2. **CLIP-ViT-L/14** frozen image encoder over the top-8 most confident patches, augmented with an MLP-based positional prior over the bbox coordinates `(x, y, w, h)`.
-3. **ClinicalBERT** frozen text encoder for radiology reports.
-4. **Projection + contrastive alignment** (InfoNCE, τ = 0.07).
-5. **Cross-attention fusion** of the aligned visual and textual representations (Eq. 2).
-6. **GPT-2 decoder** with the last 4 transformer blocks fine-tuned, producing the final report .
-7. **Loss**: `L = λ₁ · L_CE + λ₂ · L_contrast` with `λ₁ = 1`, `λ₂ = 0.7.
-8. **Severity score** via TF-IDF over a severity-term set `Tₛ` built from curated seeds + NLTK VADER-identified negative tokens.
-9. **Unsupervised training**: ClinicalBERT-encoded Faster R-CNN labels are decoded by a fine-tuned **BioT5** into pseudo-reports that serve as supervision for MediVLM.
+---
+
+## 🧠 Model Overview
+
+MediVLM integrates region detection, multimodal alignment, and generative modeling:
+
+- **🔍 Region Extraction**  
+  Faster R-CNN (ResNet-34, MS-CXR pretrained) identifies salient anatomical regions.
+
+- **🖼 Visual Encoding**  
+  CLIP ViT-L/14 encodes top-8 patches augmented with an MLP-based positional prior over over bounding boxes `(x, y, w, h)`.
+
+- **📝 Text Encoding**  
+  ClinicalBERT processes radiology reports.
+
+- **🔗 Alignment**  
+  Contrastive learning via InfoNCE (τ = 0.07).
+
+- **🔄 Fusion**  
+  Cross-attention aligns visual and textual embeddings.
+
+- **🧾 Generation**  
+  GPT-2 decoder (last 4 blocks fine-tuned).
+
+- **📉 Loss Function**  
+  `L = λ₁ · L_CE + λ₂ · L_contrast`  
+  where `λ₁ = 1`, `λ₂ = 0.7`
+
+- **⚠️ Severity Scoring**  
+  TF-IDF over curated severity terms and NLTK VADER-identified negative tokens.
+
+- **🔁 Unsupervised Learning**  
+  BioT5 generates pseudo-reports from ClinicalBERT-encoded region labels.
+
+---
 
 ## Installation
 
