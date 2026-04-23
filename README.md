@@ -6,6 +6,7 @@
 **“MediVLM: A Vision Language Model for Radiology Report Generation from Medical Images”**  
 Debanjan Goswami, Ronast Subedi, Shayok Chakraborty  
 *Findings of EMNLP 2025* (pp. 10287–10304)
+> https://aclanthology.org/2025.findings-emnlp.544/
 
 ---
 
