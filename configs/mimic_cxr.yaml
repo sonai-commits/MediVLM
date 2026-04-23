@@ -1,0 +1,39 @@
+detector:
+  num_anatomical_classes: 29
+  weights_path: null
+  top_p_patches: 8
+  patch_size: 28
+  freeze: true
+image_encoder:
+  model_name: openai/clip-vit-large-patch14
+  image_size: 224
+  freeze: true
+text_encoder:
+  model_name: medicalai/ClinicalBERT
+  max_length: 128
+  freeze: true
+projection:
+  proj_dim: 512
+  temperature: 0.07
+  dropout: 0.1
+fusion:
+  num_heads: 8
+  dropout: 0.1
+decoder:
+  model_name: gpt2
+  trainable_blocks: 4
+  max_length: 77
+  beam_size: 4
+data:
+  dataset: mimic_cxr
+  root: data/mimic_cxr
+  ann_file: annotations.json
+  image_size: 224
+  batch_size: 32
+  num_workers: 8
+training:
+  epochs: 30
+  lr: 2.0e-5
+  lambda_ce: 1.0
+  lambda_contrast: 0.7
+  output_dir: outputs/mimic_cxr
