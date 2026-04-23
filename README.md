@@ -43,7 +43,7 @@ MediVLM integrates region detection, multimodal alignment, and generative modeli
 
 ---
 
-## Installation
+## ⚙️ Installation
 
 ```bash
 # 1) create a fresh env and install PyTorch appropriate for your CUDA
@@ -60,6 +60,7 @@ pip install radgraph          # RadGraph-F1
 pip install RaTEScore         # RaTEScore (medical entity-aware semantic F1)
 ```
 
+### 📦 Pretrained Weights (Auto-downloaded)
 The first run downloads pretrained weights from Hugging Face:
 
 - `openai/clip-vit-large-patch14` (~1.7 GB)
@@ -67,7 +68,7 @@ The first run downloads pretrained weights from Hugging Face:
 - `gpt2` (~500 MB)
 - `QizhiPei/biot5-base` (~900 MB — only needed for unsupervised / pseudo-labelling)
 
-## Repository layout
+## 📁 Repository Layout
 
 ```
 MediVLM/
@@ -91,7 +92,7 @@ MediVLM/
     
 ```
 
-## Dataset layout
+## 📊 Dataset Format
 
 All three datasets use the R2Gen-style JSON annotation format:
 
@@ -110,7 +111,7 @@ Each entry looks like:
  "report": "The heart is normal in size. The lungs are clear. ..."}
 ```
 
-Dataset statistics:
+### 📈 Dataset Statistics
 
 | Split | IU X-Ray | MIMIC-CXR | CASIA-CXR (Pneumonia) |
 | ----- | -------- | --------- | --------------------- |
@@ -127,7 +128,7 @@ checkpoint. If the weights are missing the module falls back to an
 ImageNet-initialised ResNet-34 FPN — functional for the pipeline, but
 the anatomical-region quality will degrade.
 
-## Training
+## 🏋️ Training
 
 ### Supervised
 
@@ -137,11 +138,12 @@ python scripts/train_supervised.py --config configs/casia_cxr.yaml
 python scripts/train_supervised.py --config configs/mimic_cxr.yaml
 ```
 
-Hyperparameters: AdamW, `lr = 2e-5`, batch size 32,
-30-50 epochs (`epochs: 30` is sufficient for MIMIC-CXR, 50 for
-IU X-Ray and CASIA-CXR). Mixed precision is on by default. Each epoch
-writes a checkpoint to `outputs/<dataset>/`, and the checkpoint with
-the best BLEU-4 on the val split is saved to `best.ckpt`.
+- Optimizer: AdamW  
+- LR: 2e-5  
+- Batch size: 32  
+- Epochs: 30–50  (`epochs: 30` is sufficient for MIMIC-CXR, 50 for IU X-Ray and CASIA-CXR)
+- Mixed precision enabled
+
 
 ### Unsupervised
 
@@ -162,7 +164,8 @@ The pseudo-report generator encodes Faster R-CNN region labels with
 ClinicalBERT, decodes them with BioT5, and assembles one sentence per
 region into a coherent pseudo-report.
 
-## Evaluation
+---
+## 📏 Evaluation
 
 ```bash
 python scripts/evaluate.py \
@@ -171,6 +174,7 @@ python scripts/evaluate.py \
     --metrics nlg bertscore radgraph ratescore severity
 ```
 
+### Metrics
 Metrics computed (defaults = `nlg`, `bertscore`, `severity`):
 
 - **NLG**: BLEU-1..4, METEOR, ROUGE-L
@@ -198,7 +202,7 @@ Produces JSON:
 }
 ```
 
-
+## ⚡ Key Design Choices
 - **Top-p patches, p=8**. values are
   `{6, 8, 12, 16}`. Override via `detector.top_p_patches`.
 - **Max tokens = 77 (~4 sentences)**. 
@@ -220,7 +224,7 @@ Produces JSON:
 | `-ClinicalBERT` | swap `text_encoder.model_name: openai/clip-vit-large-patch14` |
 | `-Selective Patching` | set `detector.top_p_patches: 1` and patch the whole 224×224 image instead of the bbox crop |
 
-## Citation
+## 📚 Citation
 
 ```bibtex
 @inproceedings{goswami2025medivlm,
@@ -232,7 +236,7 @@ Produces JSON:
 }
 ```
 
-## License
+## 📜 License
 
 Released under the MIT License. Models and datasets retain their
 respective licences — see their upstream sources for details.
